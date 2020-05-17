@@ -1,9 +1,10 @@
 import React from "react";
+import CameraContainer from "Containers/CameraContainer";
 
 const App = () =>{
   return (
     <div className="App">
-      하잉
+      <CameraContainer />
     </div>
   );
 }
