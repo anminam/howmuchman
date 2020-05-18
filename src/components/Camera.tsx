@@ -1,38 +1,27 @@
-import React, {useState} from 'react';
+import React, { useRef } from 'react';
 
 const Camera = () => {
 
-    const [canvas, setCanvas] = useState();
-    const [videoStream, stateVideoStream] = useState<HTMLVideoElement | null>(null);
+  const imgEl = useRef<HTMLImageElement>(null);
 
-    return (
-        <div>
-         <video 
-           ref={(stream) => { stateVideoStream(stream) }}
-           width='800'
-           height='600'
-           style={{display: 'none'}}>
-         </video>
-         <canvas
-           ref={(canvas) => { setCanvas(canvas) }}
-           width='800'
-           height='600'
-           style={{display: 'none'}}
-         />
-       </div>
-    ) 
-}
+  const onChangeCamera = (e: React.ChangeEvent<HTMLInputElement>): void => {
+    const { files } = e.target;
 
-const submitPhoto = () => {
-    const image = this.camera.captureImage()
-    doSomethingWithImage(image)
-}
+    if (files === null) {
+      return;
+    }
 
-const captureImage = () => {
-    const context = this.canvas.getContext("2d")
-    context.drawImage(this.videoStream, 0, 0, 800, 600)
-    const image = this.canvas.toDataURL('image/jpeg', 0.5)
-    return image
+    if (null !== imgEl.current) {
+      imgEl.current.src = URL.createObjectURL(files[0]);
+    }
+  }
+
+  return (
+    <>
+      <input type="file" accept="image/*" capture="camera" id="camera" onChange={onChangeCamera} />
+      <img id="frame" ref={imgEl} alt="img" />
+    </>
+  )
 }
 
 export default Camera;

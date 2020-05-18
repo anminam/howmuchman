@@ -1,10 +1,10 @@
 import React from 'react';
-import Camera from 'components/Camera';
+import ImageRegister from 'components/ImageRegister';
 
 const CameraContainer = () => {
     return (
         <div>
-            <Camera />
+            <ImageRegister />
         </div>
     )
 }
