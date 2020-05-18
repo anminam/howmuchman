@@ -1,26 +1,36 @@
-import React, { useRef } from 'react';
+import React, { useRef, useEffect, useState } from 'react';
 
 const Camera = () => {
 
-  const imgEl = useRef<HTMLImageElement>(null);
+  const videoEl = useRef<HTMLVideoElement>(null);
+  const [errMessage, setErrorMessage] = useState<String>('');
 
-  const onChangeCamera = (e: React.ChangeEvent<HTMLInputElement>): void => {
-    const { files } = e.target;
-
-    if (files === null) {
-      return;
-    }
-
-    if (null !== imgEl.current) {
-      imgEl.current.src = URL.createObjectURL(files[0]);
+  /**
+   * 이미지 받아오기
+   * @param stream 
+   */
+  const handleSuccess = (stream) => {
+    if (null !== videoEl.current) {
+      videoEl.current.srcObject = stream;
     }
   }
 
+  useEffect(() => {
+    navigator.mediaDevices.getUserMedia({ video: true })
+      .then(handleSuccess)
+      .catch((err) => {
+        if (err.name === 'NotFoundError') {
+          setErrorMessage('카메라를 찾을 수 없습니다.');
+        }
+      });
+  }, []);
+
+
   return (
-    <>
-      <input type="file" accept="image/*" capture="camera" id="camera" onChange={onChangeCamera} />
-      <img id="frame" ref={imgEl} alt="img" />
-    </>
+    <div>
+      <video id="player" ref={videoEl} controls autoPlay />
+      <p>{errMessage}</p>
+    </div>
   )
 }
 
