@@ -6,13 +6,15 @@ const Camera = () => {
   const [cameraStream, setCameraStream] = useState<MediaStream>();
   const [errMessage, setErrorMessage] = useState<String>('');
   const [deviceList, setDeviceList] = useState<MediaDeviceInfo[]>([]);
+  const [isMulticamera, setIsMulticamera] = useState<Boolean>(false);
+  const [selectedCameraIndex, setSelectedCameraIndex] = useState<number>(0);
 
   // 비디오 설정
   const initMediaConfig = {
     video: {
       facingMode: {
-        exact: "user"
-        // exact: "environment"
+        // exact: "user"
+        exact: "environment"
       }
     }
   }
@@ -43,18 +45,31 @@ const Camera = () => {
         addDevices.push(device);
       }
     });
-    setDeviceList([...addDevices])
+    setDeviceList([...addDevices]);
+    if(addDevices.length > 1) {
+      setIsMulticamera(true);
+    }
+
   }
 
   const onClickCameraKind = (e: React.MouseEvent<HTMLButtonElement, MouseEvent>) => {
     stopCamera();
 
-    const config = 'environment';
+    const configList = ['environment', 'user'];
+    const deviceLength = configList.length;
+    let nextIndex = selectedCameraIndex + 1;
+    
+    if(deviceLength === nextIndex) {
+      nextIndex = 0;
+    }
+
+    setSelectedCameraIndex(nextIndex);
+
     setMediaConfig({
       ...mediaConfig,
       video: {
         facingMode: {
-          exact: config
+          exact: configList[nextIndex]
         }
       }
     })
@@ -83,13 +98,14 @@ const Camera = () => {
       });
   }, [mediaConfig]);
 
-  console.log('이게', deviceList);
   return (
     <div>
       <video id="player" ref={videoEl} controls autoPlay />
       <p>{errMessage}</p>
       <div>
-        <button onClick={onClickCameraKind}>꾸앙</button>
+        {
+          isMulticamera && <button onClick={onClickCameraKind}>꾸앙</button>
+        }
       </div>
     </div>
   )
