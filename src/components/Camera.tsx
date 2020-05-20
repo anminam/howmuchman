@@ -8,8 +8,10 @@ enum IDirection {
   FRONT,
   BACK
 }
-
-type ICameraDirectionConfig = 'user' | 'environment';
+enum ICameraDirectionConfig {
+  USER = 'user',
+  ENVIRONMENT = 'environment'
+}
 
 interface ICameraConfig {
   direction?:IDirection
@@ -36,13 +38,13 @@ interface IMediaConfig {
  * @param configDirection 
  */
 const getDirection = (configDirection:IDirection):ICameraDirectionConfig => {
-  let direction: ICameraDirectionConfig = 'environment'
+  let direction: ICameraDirectionConfig = ICameraDirectionConfig.ENVIRONMENT
   switch(configDirection) {
     case IDirection.FRONT: 
-      direction = 'user';
+      direction = ICameraDirectionConfig.USER;
       break;
     case IDirection.BACK: 
-      direction = 'environment';
+      direction = ICameraDirectionConfig.ENVIRONMENT;
       break;
     default:
       break;
@@ -55,7 +57,7 @@ const getDirection = (configDirection:IDirection):ICameraDirectionConfig => {
 const initMediaConfig:IMediaConfig = {
   video: {
     facingMode: {
-      exact: "environment"
+      exact: ICameraDirectionConfig.ENVIRONMENT
     }
   }
 }
@@ -124,7 +126,7 @@ const Camera = (props: ICamera) => {
   const onClickCameraKind = (event: React.MouseEvent<HTMLButtonElement, MouseEvent>) => {
     stopCamera();
 
-    const configList:Array<ICameraDirectionConfig> = ['environment', 'user'];
+    const configList:Array<ICameraDirectionConfig> = [ICameraDirectionConfig.ENVIRONMENT, ICameraDirectionConfig.USER];
     const deviceLength = configList.length;
     let nextIndex = selectedCameraIndex + 1;
     
