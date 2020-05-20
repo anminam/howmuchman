@@ -13,12 +13,13 @@ enum ICameraDirectionConfig {
   ENVIRONMENT = 'environment'
 }
 
-interface ICameraConfig {
+export interface ICameraConfig {
   direction?:IDirection
 }
-interface ICamera {
+export interface ICamera {
   onCameraStart?: (stream: MediaStream) => void
   onCameraError?: (error:string) => void
+  
   onClickClose?: () => void
   onClickTakePhoto?: () => void
   onClickSwitchCamera?: () => void
@@ -74,8 +75,8 @@ const Camera = (props: ICamera) => {
 
   // init
   useEffect(() => {
-    if(props.config) {
-      if(props.config.direction) {
+    if (props.config) {
+      if (props.config.direction) {
           setMediaConfig({
             ...mediaConfig,
             video: {
@@ -86,7 +87,7 @@ const Camera = (props: ICamera) => {
           });
       }
     }
-  },[]);
+  }, []);
 
   /**
    * 권한 받기 성공
@@ -113,7 +114,7 @@ const Camera = (props: ICamera) => {
       }
     });
     setDeviceList([...addDevices]);
-    if(addDevices.length > 1) {
+    if (addDevices.length > 1) {
       setIsMulticamera(true);
     }
 
@@ -130,7 +131,7 @@ const Camera = (props: ICamera) => {
     const deviceLength = configList.length;
     let nextIndex = selectedCameraIndex + 1;
     
-    if(deviceLength === nextIndex) {
+    if (deviceLength === nextIndex) {
       nextIndex = 0;
     }
 
@@ -184,8 +185,8 @@ const Camera = (props: ICamera) => {
 
   // 에러 콜백
   useEffect(()=> {
-    if(errMessage) {
-      if(typeof(props.onCameraError) === 'function') {
+    if (errMessage) {
+      if (typeof(props.onCameraError) === 'function') {
         props.onCameraError(errMessage)
       }
     }
