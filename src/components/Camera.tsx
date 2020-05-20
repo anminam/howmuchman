@@ -30,7 +30,11 @@ interface IMediaConfig {
   video: {
     facingMode: {
       exact: ICameraDirectionConfig
-    }
+    },
+    // mandatory: {
+    //   minWidth: number,
+    //   minHeight: number
+    // }
   }
 }
 
@@ -59,7 +63,11 @@ const initMediaConfig:IMediaConfig = {
   video: {
     facingMode: {
       exact: ICameraDirectionConfig.ENVIRONMENT
-    }
+    },
+    // mandatory: {
+    //   minWidth: 1280,
+    //   minHeight: 720
+    // }
   }
 }
 
@@ -80,6 +88,7 @@ const Camera = (props: ICamera) => {
           setMediaConfig({
             ...mediaConfig,
             video: {
+              // mandatory: mediaConfig.video.mandatory,
               facingMode: {
                 exact: getDirection(props.config.direction)
               }
@@ -140,11 +149,12 @@ const Camera = (props: ICamera) => {
     setMediaConfig({
       ...mediaConfig,
       video: {
+        // mandatory: mediaConfig.video.mandatory,
         facingMode: {
           exact: configList[nextIndex]
         }
       }
-    })
+    });
   }
 
   const stopCamera = () => {
@@ -153,6 +163,31 @@ const Camera = (props: ICamera) => {
         i.stop();
       });
     }
+  }
+
+  const onTakePhoto = () => {
+    if (props.onClickTakePhoto) {
+      props.onClickTakePhoto();
+    } 
+
+    // 이상하다
+    const vidoe = document.getElementById('player') as HTMLVideoElement;
+    const canvas = document.getElementById('photo-canvas') as HTMLCanvasElement;
+    const img = document.getElementById('photo-image') as HTMLImageElement;
+    const ctx = canvas.getContext('2d') as CanvasRenderingContext2D;
+
+    // cameraStream?.getVideoTracks()[0];
+    // ImageCaptrue()
+    
+    
+    ctx.drawImage(vidoe, 0, 0, 1000, 1000);
+    img.src = canvas.toDataURL('image/webp');
+    
+  }
+
+  const getDataUri = (userConfig) => {
+    
+
   }
 
   useEffect(() => {
@@ -165,6 +200,7 @@ const Camera = (props: ICamera) => {
             setErrorMessage('카메라를 찾을 수 없습니다.');
             break;
           default:
+            debugger;
             setErrorMessage('알 수 없는 에러');
         }
       });
@@ -201,7 +237,12 @@ const Camera = (props: ICamera) => {
         {
           isMulticamera && <button onClick={onClickCameraKind}>꾸앙</button>
         }
+        {
+          <button onClick={onTakePhoto}>사진찍기</button>
+        }
       </div>
+      <canvas id="photo-canvas"></canvas>
+      <img id="photo-image" style={{display:'none'}} alt="my"></img>
     </div>
   )
 }
