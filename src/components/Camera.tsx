@@ -21,22 +21,11 @@ export interface ICamera {
   onCameraError?: (error:string) => void
   
   onClickClose?: () => void
-  onClickTakePhoto?: () => void
+  onClickTakePhoto?: (uri:string) => void
   onClickSwitchCamera?: () => void
   config?: ICameraConfig
 }
 
-interface IMediaConfig {
-  video: {
-    facingMode: {
-      exact: ICameraDirectionConfig
-    },
-    // mandatory: {
-    //   minWidth: number,
-    //   minHeight: number
-    // }
-  }
-}
 
 /**
  * props에서 얻은값 -> ICameraDirectionConfig
@@ -58,9 +47,26 @@ const getDirection = (configDirection:IDirection):ICameraDirectionConfig => {
   return direction;
 }
 
+
+interface IMediaConfig {
+  video: {
+    width: { ideal: number },
+    height: { ideal: number },
+    facingMode: {
+      exact: ICameraDirectionConfig
+    },
+    // mandatory: {
+    //   minWidth: number,
+    //   minHeight: number
+    // }
+  }
+}
+
 // 비디오 설정
 const initMediaConfig:IMediaConfig = {
   video: {
+    width: { ideal: 1280 },
+    height: { ideal: 1024 },
     facingMode: {
       exact: ICameraDirectionConfig.ENVIRONMENT
     },
@@ -88,6 +94,8 @@ const Camera = (props: ICamera) => {
           setMediaConfig({
             ...mediaConfig,
             video: {
+              width: mediaConfig.video.width,
+              height: mediaConfig.video.height,
               // mandatory: mediaConfig.video.mandatory,
               facingMode: {
                 exact: getDirection(props.config.direction)
@@ -150,6 +158,8 @@ const Camera = (props: ICamera) => {
       ...mediaConfig,
       video: {
         // mandatory: mediaConfig.video.mandatory,
+        width: mediaConfig.video.width,
+        height: mediaConfig.video.height,
         facingMode: {
           exact: configList[nextIndex]
         }
@@ -166,16 +176,27 @@ const Camera = (props: ICamera) => {
   }
 
   const onTakePhoto = () => {
-    if (props.onClickTakePhoto) {
-      props.onClickTakePhoto();
-    } 
 
     const canvas = document.getElementById('photo-canvas') as HTMLCanvasElement;
+    if (null !== videoEl.current) {
+      // canvas.width = videoEl.current.offsetWidth;
+      // canvas.height = videoEl.current.offsetHeight;
+      canvas.width = 1024;
+      canvas.height = 1280;
+      // canvas.width
+    }
+
     const ctx = canvas.getContext('2d') as CanvasRenderingContext2D;
     const img = document.getElementById('photo-image') as HTMLImageElement;
 
-    ctx.drawImage(videoEl.current as HTMLVideoElement, 0, 0, 1000, 1000);
-    img.src = canvas.toDataURL('image/webp');
+    ctx.drawImage(videoEl.current as HTMLVideoElement, 0, 0);
+    const uri = canvas.toDataURL('image/webp');
+    img.src = uri;
+
+
+    if (props.onClickTakePhoto) {
+      props.onClickTakePhoto(uri);
+    }
     
   }
 
@@ -194,7 +215,6 @@ const Camera = (props: ICamera) => {
             setErrorMessage('카메라를 찾을 수 없습니다.');
             break;
           default:
-            debugger;
             setErrorMessage('알 수 없는 에러');
         }
       });
@@ -225,11 +245,11 @@ const Camera = (props: ICamera) => {
 
   return (
     <div>
-      <video id="player" ref={videoEl} controls autoPlay />
+      <video id="player" ref={videoEl} autoPlay />
       <p>{errMessage}</p>
       <div>
         {
-          isMulticamera && <button onClick={onClickCameraKind}>꾸앙</button>
+          isMulticamera && <button onClick={onClickCameraKind}>카메라바꾸기</button>
         }
         {
           <button onClick={onTakePhoto}>사진찍기</button>
