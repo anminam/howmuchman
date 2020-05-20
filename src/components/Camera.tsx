@@ -170,17 +170,11 @@ const Camera = (props: ICamera) => {
       props.onClickTakePhoto();
     } 
 
-    // 이상하다
-    const vidoe = document.getElementById('player') as HTMLVideoElement;
     const canvas = document.getElementById('photo-canvas') as HTMLCanvasElement;
-    const img = document.getElementById('photo-image') as HTMLImageElement;
     const ctx = canvas.getContext('2d') as CanvasRenderingContext2D;
+    const img = document.getElementById('photo-image') as HTMLImageElement;
 
-    // cameraStream?.getVideoTracks()[0];
-    // ImageCaptrue()
-    
-    
-    ctx.drawImage(vidoe, 0, 0, 1000, 1000);
+    ctx.drawImage(videoEl.current as HTMLVideoElement, 0, 0, 1000, 1000);
     img.src = canvas.toDataURL('image/webp');
     
   }
