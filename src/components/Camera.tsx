@@ -246,7 +246,7 @@ const Camera = (props: ICamera) => {
   return (
     <div>
       <video id="player" ref={videoEl} autoPlay />
-      <p>{errMessage}</p>
+      {/* <p>{errMessage}</p>
       <div>
         {
           isMulticamera && <button onClick={onClickCameraKind}>카메라바꾸기</button>
@@ -256,7 +256,7 @@ const Camera = (props: ICamera) => {
         }
       </div>
       <canvas id="photo-canvas"></canvas>
-      <img id="photo-image" style={{display:'none'}} alt="my"></img>
+      <img id="photo-image" style={{display:'none'}} alt="my"></img> */}
     </div>
   )
 }
