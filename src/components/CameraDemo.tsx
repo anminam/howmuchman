@@ -1,7 +1,7 @@
 import React, { useRef, useEffect, useState } from 'react';
 import * as CameraMan from 'lib/core/Camera';
 
-const Camera2 = () => {
+const CameraDemo = () => {
 
   const [camera, setCamera] = useState<CameraMan.default>();
   const videoEl = useRef<HTMLVideoElement>(null);
@@ -35,4 +35,4 @@ const Camera2 = () => {
   )
 }
 
-export default Camera2;
+export default CameraDemo;

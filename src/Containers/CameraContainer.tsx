@@ -1,7 +1,7 @@
 import React from 'react';
-import ImageRegister from 'components/ImageRegister';
+import ImageRegister from 'components/PhotoRegisterDemo';
 import Camera from 'components/Camera';
-import Camera2 from 'components/Camera2';
+import Camera2 from 'components/CameraDemo';
 
 const CameraContainer = () => {
     return (
