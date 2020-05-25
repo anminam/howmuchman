@@ -7,22 +7,24 @@ const initConfig = {
   height: 300
 }
 
-const PhotoRegisterDemo = () => {
+interface IPhotoRegisterComponent {
+  id:string
+  alt:string
+}
+
+const PhotoRegisterComponent = (props:IPhotoRegisterComponent) => {
 
   const imgEl = useRef<HTMLImageElement>(null);
   const inputFileEl = useRef<HTMLInputElement>(null);
-  const [photoRegister, setPhotoRegister] = useState<PhotoRegister>();
-  const [alt, stAlt] = useState<string>('');
+  const [alt, setAlt] = useState<string>(props.alt);
+  const [id, setId] = useState<string>(props.id);
   const [imgData, setImgData] = useState<string>('');
 
-  useEffect(()=> {
-    const config:IPhotoRegister = {
+  const _removeImage = () => {
+    setImgData('');
+  }
 
-    }
-    setPhotoRegister(new PhotoRegister(config));
-  },[]);
-
-  const onChangeImage = (e: React.ChangeEvent<HTMLInputElement>): void => {
+  const handleImageChange = (e: React.ChangeEvent<HTMLInputElement>): void => {
     const { files } = e.target;
 
     if (files === null) {
@@ -33,8 +35,11 @@ const PhotoRegisterDemo = () => {
     setImgData(imgSrc);
   }
 
-  const handleClickBtn = (event: React.MouseEvent<HTMLButtonElement, MouseEvent>):void => {
+  const handleRegistClick = (event: React.MouseEvent<HTMLButtonElement, MouseEvent>):void => {
     inputFileEl.current?.click();
+  }
+  const handleDeleteClick = (event: React.MouseEvent<HTMLButtonElement, MouseEvent>):void => {
+    _removeImage();
   }
 
   return (
@@ -53,11 +58,12 @@ const PhotoRegisterDemo = () => {
         }
       </div>
       <div className="button-container">
-        <input type="file" accept="image/*" capture="camera" ref={inputFileEl} onChange={onChangeImage} className="hidden-input-file" style={{display: 'none'}}/>
-        <button type="button" className="ne-bt2 btn-upload-image" onClick={handleClickBtn}>사진 등록하기</button>
+        <input type="file" accept="image/*" capture="camera" ref={inputFileEl} onChange={handleImageChange} className="hidden-input-file" style={{display: 'none'}}/>
+        <button type="button" className="ne-bt2 btn-upload-image" onClick={handleRegistClick}>사진 등록하기</button>
+        <button type="button" className="btn-delete" onClick={handleDeleteClick}>사진 삭제</button>
       </div>
     </>
   )
 }
 
-export default PhotoRegisterDemo;
+export default PhotoRegisterComponent;
