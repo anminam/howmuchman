@@ -16,8 +16,8 @@ const PhotoRegisterComponent = (props:IPhotoRegisterComponent) => {
 
   const imgEl = useRef<HTMLImageElement>(null);
   const inputFileEl = useRef<HTMLInputElement>(null);
-  const [alt, setAlt] = useState<string>(props.alt);
-  const [id, setId] = useState<string>(props.id);
+  const [alt] = useState<string>(props.alt);
+  const [id] = useState<string>(props.id);
   const [imgData, setImgData] = useState<string>('');
 
   const _removeImage = () => {
@@ -53,7 +53,7 @@ const PhotoRegisterComponent = (props:IPhotoRegisterComponent) => {
         }
         { imgData &&
           <div className="photo-container image-container" style={{width:initConfig.width, height:initConfig.height}} >
-            <img id="frame" src={imgData} ref={imgEl} alt={alt}/>
+            <img id={id} src={imgData} ref={imgEl} alt={alt}/>
           </div>
         }
       </div>
